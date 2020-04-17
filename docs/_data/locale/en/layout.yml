@@ -1,0 +1,41 @@
+navigation:
+- label: "Home"
+  type: "normal"
+  icon_type: "home"
+  icon_category: "fas"
+  url: "/"
+
+- label: "API"
+  type: "normal"
+  icon_type: "code"
+  icon_category: "fas"
+  url: "/api"
+
+cards:
+- label: "Follow us"
+  icon_type: "eye"
+  icon_category: "fas"
+  links:
+  - label: "News Atom Feed"
+    url: "/atom.xml"
+    icon_type: "rss"
+    icon_category: "fas"
+
+  - label: "GitHub Repository"
+    url: "https://github.com/jekyllize/doxygen/"
+    icon_type: "github"
+    icon_category: "fab"
+
+- label: "Quick links"
+  icon_type: "link"
+  icon_category: "fas"
+  links:
+  - label: "RVM Install"
+    url: "http://rvm.io/rvm/install/"
+    icon_type: "book"
+    icon_category: "fas"
+
+  - label: "Jekyll Docs"
+    url: "https://jekyllrb.com/docs/"
+    icon_type: "book"
+    icon_category: "fas"

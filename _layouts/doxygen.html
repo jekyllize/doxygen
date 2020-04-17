@@ -1,0 +1,166 @@
+---
+layout: "default"
+---
+{{ content }}
+
+<style type="text/css">
+	.tab   { margin-left:40px }
+	.type  { color:blue }
+	.param { color:#D20F0F; font-weight:bold }
+</style>
+
+{%-assign repo_url = site.project.repository.url-%}
+{%-assign page_ref = page.name | replace: ".md", ''-%}
+
+{%-for api in site.data.api.develop[page_ref].compounddef-%}
+	{%-assign repo_tag = page.dir | split: '/' | last-%}
+	{%-if api.kind == "file"-%}
+		{%-assign title_suffix = "File Reference"-%}
+		{%-assign functions_title = "Functions"-%}
+	{%-elsif api.kind == "class"-%}
+		{%-assign title_suffix = "Class Reference"-%}
+		{%-assign functions_title = "Public Member Functions"-%}
+	{%-endif-%}
+
+	{%-assign file_url = repo_url | append: "/blob/" | append: site.project.docs_path
+		| append: '/' | append: api.location.file-%}
+	<h1><a href="{{ file_url }}">{{ api.compoundname }}</a> {{ title_suffix }}</h1><hr/>
+
+	{%-for para in api.briefdescription.para-%}
+	<p>{{ para.value }}</p>
+	{%-endfor-%}
+	{%-for para in api.detaileddescription.para-%}
+	<p>{{ para.value }}</p>
+	{%-endfor-%}
+
+	<p><code>#include &lt;{{ api.compoundname }}&gt;</code></p><hr/>
+
+	{%-for sectiondef in api.sectiondef-%}
+		{%-if sectiondef.kind == "typedef"-%}
+			<h2 id="typedefs">Typedefs</h2>
+			{%-for memberdef in sectiondef.memberdef-%}
+				{{ memberdef.definition.value }}
+				{%-for para in memberdef.briefdescription.para-%}
+				<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+			<hr/>
+		{%elsif sectiondef.kind == "enum"-%}
+			<h2 id="enumerations">Enumerations</h2>
+			{%-for memberdef in sectiondef.memberdef-%}
+				<span class="type">enum</span>&nbsp;{{ memberdef.name.value }}&nbsp;{<br/>
+				{%-for enumvalue in memberdef.enumvalue-%}
+					<b class="tab">{{ enumvalue.name.value }}</b>
+						{{ enumvalue.initializer.value }}<br/>
+				{%-endfor-%}
+				}
+				{%-for para in memberdef.briefdescription.para-%}
+				<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+			<hr/>
+		{%elsif sectiondef.kind == "func"-%}
+
+			<h2 id="functions">Functions</h2>
+			{%-for function in sectiondef.memberdef-%}
+				<b>{{ function.definition.value }}
+				{{ function.argsstring.value }}</b>
+				{%-for para in function.briefdescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+				{%-for para in function.detaileddescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+				 {%-if function.param.size-%}
+					<b>Parameters</b><br/>
+				{%-endif-%}
+				{%-for para in function.detaileddescription.para-%}
+					{%-for parameterlist in para.parameterlist-%}
+						{%-for parameteritem in parameterlist.parameteritem-%}
+							{%-for parameternamelist in parameteritem.parameternamelist-%}
+								{%-for parametername in parameternamelist.parametername-%}
+										<span class="param">{{parametername.value}}</span>&nbsp;
+								{%-endfor-%}
+							{%-endfor-%}
+							{%-for para in parameteritem.parameterdescription.para-%}
+								{{para.value}}<br/>
+							{%-endfor-%}
+						{%-endfor-%}
+					{%-endfor-%}
+				{%-endfor-%}
+				<hr/>
+			{%-endfor-%}
+		{%-endif-%}
+	{%-endfor-%}
+
+	{%-if api.innerclass.size > 0-%}
+		{%-for class in api.innerclass-%}
+			{%-assign class_api = site.data.api.develop[class.refid].compounddef-%}
+			<h2 id="classes">Classes</h2><hr/>
+			<p><span class="type">class</span><a href="{{ page.dir }}{{ class.refid }}">
+				{{ class.value }}</a></p>
+			{%-for compound in class_api-%}
+				{%-for para in compound.briefdescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+				{%-for para in compound.detaileddescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+		{%-endfor-%}
+	{%-endif-%}
+{%-endfor-%}
+
+{%comment%}
+{%-if enumsCount > 0-%}
+	<h2 id="enums">Enumerations</h2>
+	{%-for ref in page.refs-%}
+		{%-assign api = site.data.api.develop[ref]-%}
+		{%-for enum in api.ChildEnums-%}
+			{%-if enum.Location.Filename contains page.document
+				or enum.DefLocation.Filename contains page.document-%}
+				<p><span class="type">enum</span>&nbsp;{<br/>
+				{%-for member in enum.Members-%}
+					<span style="margin-left:40px"><b>{{ member }}</b><br/></span>
+				{%-endfor-%}
+				}
+				{{ enum.Description.Children.Children }}
+				{{ enum.Name }}
+				<hr/>
+			{%-endif-%}
+		{%-endfor-%}
+	{%-endfor-%}
+{%-endif-%}
+
+{%-if functionsCount > 0-%}
+	<h2 id="functions">Functions</h2>
+	{%-for ref in page.refs-%}
+		{%-assign api = site.data.api.develop[ref]-%}
+		{%-for function in api.ChildFunctions-%}
+			{%-if function.Location.Filename contains page.document-%}
+				<p id="{{ function.Name }}">
+				<span class="type">
+					{{ function.ReturnType.Type.Name | replace: "_Bool", "bool" }}</span>
+				<a href="#{{ function.Name }}"><b>{{ function.Name }}</b></a>&nbsp;(
+				{%-for param in function.Params-%}
+					{%-assign paramTypeName = param.Type.Name | replace: "_Bool", "bool"-%}
+					{%-if paramTypeName contains '*' or paramTypeName contains '&'-%}
+						{%-assign paramArg = paramTypeName | append: param.Name-%}
+					{%-else-%}
+						{%-assign paramArg = paramTypeName | append: ' ' | append: param.Name-%}
+					{%-endif-%}
+					{{ paramArg }}
+					{%-if forloop.last == false-%},&nbsp;{%-endif-%}
+				{%-endfor-%})
+				</p>
+				{%-for description in function.Description-%}
+					{%-for desc_children in description.Children-%}
+
+					{%-endfor-%}
+				{%-endfor-%}
+				<hr/>
+			{%-endif-%}
+		{%-endfor-%}
+	{%-endfor-%}
+{%-endif-%}
+{%endcomment%}
