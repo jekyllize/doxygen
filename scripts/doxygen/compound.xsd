@@ -1,9 +1,8 @@
+<?xml version='1.0' encoding='utf-8' ?>
 <!--
   Post Doxygen v1.8.18,
   commit https://github.com/doxygen/doxygen/commit/2084f3a from master branch
 -->
-
-<?xml version='1.0' encoding='utf-8' ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="doxygen" type="DoxygenType"/>
 
