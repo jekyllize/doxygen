@@ -25,11 +25,11 @@ import xmlschema
 # The result page will be placed in the docs directory as index for the list of
 # API pages when placing several API versions documentation in subdirectories.
 #
-# @param directory Destination directory for the resulting index.md file.
+# @param dest_dir Destination directory for the resulting index.md file.
 #
-def create_api_index(directory):
+def create_api_index(dest_dir):
 
-  dest = Path("api")
+  dest = Path(dest_dir)
   if not dest.exists() and not dest.is_dir():
     print("Error: '{}' doesn't esists or not a directory.".format(dest))
   """
@@ -75,25 +75,31 @@ def git_version():
 # to be saved in `_data/api` and the related Markdown page in the related
 # docs directory.
 #
-# @param file      The input file path as string.
-# @param directory The destination directory name, e.g.: project version.
+# @param file     The input file path as string.
+# @param dest_dir The destination directory name, e.g.: project version.
 #
-def from_xml(file, directory):
+def from_xml(file, dest_dir):
 
-# tag_name = git_version()
-  data_dir = Path("_data/" + directory)
-  md_dir   = Path(directory)
-  xsd_file = Path("scripts/doxygen/compound.xsd")
-  file_base_name = Path(file).name.replace(".xml", '')
+# tag_name  = git_version()
+  data_dir  = Path("_data/" + dest_dir)
+  md_dir    = Path(dest_dir)
+  xml_dir   = Path(file).parents[0]
+  file_name = Path(file).name
+  base_name = Path(file_name).stem
+
+  if file_name == "index.xml":
+    xsd_file = Path(xml_dir / "index.xsd")
+  else:
+    xsd_file = Path("scripts/doxygen/compound.xsd")
 
 # JSON data files
-  json_name = file_base_name + ".json"
+  json_name = base_name + ".json"
   json_path = data_dir / json_name
   json_file = Path(json_path)
 
 # Markdown content files
   md_hdr  = "---\nlayout: \"doxygen\"\nno_title_header: true\n---\n"
-  md_name = file_base_name + ".md"
+  md_name = base_name + ".md"
   md_path = md_dir / md_name
   md_file = Path(md_path)
 
@@ -108,9 +114,9 @@ def from_xml(file, directory):
   s = json.dumps(d, indent=2)
 
   # Fix datafiles to work with Jekyll
-  s = s.replace("\"@",    "\"")
-  s = s.replace("\"$\":", "\"value\":")
-  s = s.replace("\"no\"", "\"false\"")
+  s = s.replace("\"@",    "\"") \
+       .replace("\"$\":", "\"value\":") \
+       .replace("\"no\"", "\"false\"")
 
   print("Generating {:s}...".format(str(json_path)))
   json_file.open('w')
@@ -122,15 +128,17 @@ def from_xml(file, directory):
 
 ## Parses a Doxyfile and save the result as a dict.
 #
-# @param file The file path to the Doxyfile as string.
+# @param doxyfile The file path to the Doxyfile as string.
 #
 # @todo Check for inline comments.
 #
-def load(file):
+def load(doxyfile):
 
   doxydict = {}
-  doxyfile = open(file)
+  doxyfile = open(doxyfile)
   lines    = doxyfile.readlines()
+
+# This is to have Doxygen version *before* run(), maybe unused and later removed
   lines[0] = lines[0].replace("# Doxyfile ", "VERSION=")
   is_multi = False
   key_multi= ""
@@ -178,11 +186,12 @@ def load(file):
 
 ## Loads a Doxyfile and runs the main documentation generation process.
 #
-# @param file The file path to the Doxyfile as string.
+# @param doxyfile The name of the Doxygen configuration file.
+# @param dest_dir The name of the destination directory.
 #
-# @todo Manage `OUTPUT_DIRECTORY` and `XML_OUTPUT`
+# @todo Manage `OUTPUT_DIRECTORY` and `XML_OUTPUT` relation
 #
-def run(doxyfile="Doxyfile"):
+def run(doxyfile="Doxyfile", dest_dir="api"):
 
   path = Path(doxyfile)
   if not path.exists():
@@ -191,29 +200,35 @@ def run(doxyfile="Doxyfile"):
   subprocess.run(["doxygen", doxyfile])
   config = load(doxyfile)
   xmldir = Path(config.get("xml_output", "./xml"))
-  dest   = "api"
 
   print("Generating JSON and Markdown files from XML:")
   for xml in xmldir.iterdir():
     xmlname = str(xml)
     if xml.is_file() and \
-      ("namespace" in xmlname or "class" in xmlname or "_8" in xmlname):
-        from_xml(xmlname, dest + '/' + config.get("project_number", "develop"))
+      (not ".xsd" in xmlname and not ".xslt" in xmlname and not "dir_" in xmlname):
+        from_xml(xmlname, dest_dir + '/' + config.get("project_number", "develop"))
 
-  print("Generating API index page in {}...".format(dest))
-  create_api_index(dest)
+  print("Generating API index page in `{}`...".format(dest_dir))
+  create_api_index(dest_dir)
 # print("Removing XML output...")
 # shutil.rmtree(xmldir)
   print("Done.")
 
-if __name__ == "__main__":
+def main():
+
   parser = argparse.ArgumentParser(description=\
     "Loads a Doxyfile and runs the main documentation generation process.")
 
-  parser.add_argument("-i", "--input", default="./Doxyfile", help=\
-    "The file path to the Doxyfile as string.")
+  parser.add_argument("-i", "--input", default="Doxyfile", help=\
+    "The name of the Doxygen configuration file.")
+
+  parser.add_argument("-o", "--output", default="api", help=\
+    "The name of the destination directory.")
 
   args = parser.parse_args()
 
   if args.input != "":
-    run(args.input)
+    run(args.input, args.output)
+
+if __name__ == "__main__":
+  main()
