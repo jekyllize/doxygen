@@ -1,1 +1,110 @@
-./../../_layouts/doxygen.html
+---
+layout: "default"
+---
+{{ content }}
+
+<link type="text/css" href="{{ "/assets/css/doxygen.css" | relative_url }}" rel="stylesheet">
+
+{%-assign repo_url = site.project.repository.url-%}
+{%-assign page_ref = page.name | replace: ".md", ''-%}
+{%-assign functions_title = "Functions"-%}
+
+{%-for api in site.data.api.develop[page_ref].compounddef-%}
+
+	{%-assign repo_tag = page.dir | split: '/' | last-%}
+	{%-assign file_url = repo_url | append: "/blob/" | append: site.project.docs_path
+		| append: '/' | append: api.location.file-%}
+
+	{%-if api.kind == "page"-%}
+		{%-assign title = api.title-%}
+	{%-else-%}
+		{%-if api.kind == "file"-%}
+			{%-assign title_suffix = "File"-%}
+		{%-elsif api.kind == "namespace"-%}
+			{%-assign title_suffix = "Namespace"-%}
+		{%-elsif api.kind == "class"-%}
+			{%-assign title_suffix = "Class"-%}
+			{%-assign functions_title = "Public Member Functions"-%}
+		{%-endif-%}
+		{%-capture title-%}
+		<a href="{{ file_url }}">{{ api.compoundname }}</a> {{ title_suffix }} Reference
+		{%-endcapture-%}
+	{%-endif-%}
+
+	<h1>{{ title }}</h1><hr/>
+
+	<div class="textblock">
+		{%-for para in api.briefdescription.para-%}
+		<p>{{ para.value }}</p>
+		{%-endfor-%}
+		{%-for para in api.detaileddescription.para-%}
+			<p>{{ para.value }}</p>
+			{%-for simplesect in para.simplesect-%}
+				<dl class="section {{ simplesect.kind }}">
+					<dt>{{ simplesect.kind | capitalize }}</dt>
+					{%-for para in simplesect.para-%}
+						<dd class="tab">{{ para.value }}</dd>
+					{%-endfor-%}
+				</dl>
+			{%-endfor-%}
+		{%-endfor-%}
+	</div>
+
+	{%-if api.kind == "file" or api.kind == "namespace"-%}
+		{%-include doxygen/file.html-%}
+	{%-endif-%}
+{%-endfor-%}
+
+{%comment%}
+{%-if enumsCount > 0-%}
+	<h2 id="enums">Enumerations</h2>
+	{%-for ref in page.refs-%}
+		{%-assign api = site.data.api.develop[ref]-%}
+		{%-for enum in api.ChildEnums-%}
+			{%-if enum.Location.Filename contains page.document
+				or enum.DefLocation.Filename contains page.document-%}
+				<p><span class="type">enum</span>&nbsp;{<br/>
+				{%-for member in enum.Members-%}
+					<span style="margin-left:40px"><b>{{ member }}</b><br/></span>
+				{%-endfor-%}
+				}
+				{{ enum.Description.Children.Children }}
+				{{ enum.Name }}
+				<hr/>
+			{%-endif-%}
+		{%-endfor-%}
+	{%-endfor-%}
+{%-endif-%}
+
+{%-if functionsCount > 0-%}
+	<h2 id="functions">Functions</h2>
+	{%-for ref in page.refs-%}
+		{%-assign api = site.data.api.develop[ref]-%}
+		{%-for function in api.ChildFunctions-%}
+			{%-if function.Location.Filename contains page.document-%}
+				<p id="{{ function.Name }}">
+				<span class="type">
+					{{ function.ReturnType.Type.Name | replace: "_Bool", "bool" }}</span>
+				<a href="#{{ function.Name }}"><b>{{ function.Name }}</b></a>&nbsp;(
+				{%-for param in function.Params-%}
+					{%-assign paramTypeName = param.Type.Name | replace: "_Bool", "bool"-%}
+					{%-if paramTypeName contains '*' or paramTypeName contains '&'-%}
+						{%-assign paramArg = paramTypeName | append: param.Name-%}
+					{%-else-%}
+						{%-assign paramArg = paramTypeName | append: ' ' | append: param.Name-%}
+					{%-endif-%}
+					{{ paramArg }}
+					{%-if forloop.last == false-%},&nbsp;{%-endif-%}
+				{%-endfor-%})
+				</p>
+				{%-for description in function.Description-%}
+					{%-for desc_children in description.Children-%}
+
+					{%-endfor-%}
+				{%-endfor-%}
+				<hr/>
+			{%-endif-%}
+		{%-endfor-%}
+	{%-endfor-%}
+{%-endif-%}
+{%endcomment%}
