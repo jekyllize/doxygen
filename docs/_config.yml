@@ -42,6 +42,8 @@ plugins:
 - jekyll-sitemap
 - jemoji
 
+baseurl: "/doxygen"
+
 organization:
   name: "Jekyllize"
   url: "https://github.com/jekyllize"
