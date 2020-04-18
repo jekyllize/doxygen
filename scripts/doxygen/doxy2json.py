@@ -3,14 +3,12 @@
 ##
 # @file      doxy2json.py
 # @package   doxy2json
-# @brief     Converts Doxygen configuration and XML output to JSON.
-# @details   The extracted data can be used by site generators like [Jekyll].
 # @author    Andrea Zanellato
 # @copyright MPL-2.0
 # @date      2020
-#
-# [Jekyll]: https://jekyllrb.com
-#
+# @brief     Converts Doxygen configuration and XML output to JSON.
+# @details   The extracted data can be used by site generators like Jekyll.
+
 from pathlib import Path
 #from dulwich.repo import Repo
 import argparse
@@ -122,9 +120,12 @@ def from_xml(file, dest_dir):
   json_file.open('w')
   json_file.write_text(s)
 
-  print("Generating {:s}...".format(str(md_path)))
-  md_file.open('w')
-  md_file.write_text(md_hdr)
+  if md_file.exists():
+    print("Skipping {:s}...".format(str(md_path)))
+  else:
+    print("Generating {:s}...".format(str(md_path)))
+    md_file.open('w')
+    md_file.write_text(md_hdr)
 
 ## Parses a Doxyfile and save the result as a dict.
 #
@@ -189,7 +190,7 @@ def load(doxyfile):
 # @param doxyfile The name of the Doxygen configuration file.
 # @param dest_dir The name of the destination directory.
 #
-# @todo Manage `OUTPUT_DIRECTORY` and `XML_OUTPUT` relation
+# @todo Manage OUTPUT_DIRECTORY and XML_OUTPUT relation
 #
 def run(doxyfile="Doxyfile", dest_dir="api"):
 
