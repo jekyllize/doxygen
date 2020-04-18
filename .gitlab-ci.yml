@@ -4,9 +4,7 @@ variables:
   JEKYLL_ENV: production
 
 pages:
-  stage: deploy
   script:
-  - cd ./docs
   - bundle install
   - bundle exec jekyll build -d public
   artifacts:
