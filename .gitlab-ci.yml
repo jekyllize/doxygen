@@ -5,7 +5,7 @@ variables:
 
 pages:
   before_script:
-  - cd docs
+  - cd ./docs
   stage: deploy
   script:
   - bundle install

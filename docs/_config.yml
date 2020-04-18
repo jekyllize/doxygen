@@ -50,7 +50,7 @@ project:
   name: "doxy2json"
   copyright_owner: "Jekyllize Team"
   spdx_license_id: "MPL-2.0"
-  docs_path: "docs"
+  docs_path: "master/docs"
   authors:
     content: "Andrea Zanellato"
     web:     "Andrea Zanellato"
