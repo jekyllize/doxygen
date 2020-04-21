@@ -1,0 +1,64 @@
+{
+  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+  "xsi:noNamespaceSchemaLocation": "index.xsd",
+  "version": "1.8.17",
+  "compound": [
+    {
+      "refid": "namespacedoxy2json",
+      "kind": "namespace",
+      "name": "doxy2json",
+      "member": [
+        {
+          "refid": "namespacedoxy2json_1a620ab7ba085a82a31cdb7de2ecbb3ea6",
+          "kind": "function",
+          "name": "create_api_index"
+        },
+        {
+          "refid": "namespacedoxy2json_1a5e0cdaab152dfb3980da9511b94bfcce",
+          "kind": "function",
+          "name": "git_version"
+        },
+        {
+          "refid": "namespacedoxy2json_1a2a199775b2922addb65faf079f312760",
+          "kind": "function",
+          "name": "from_xml"
+        },
+        {
+          "refid": "namespacedoxy2json_1ab2b3dba47d7c7e80e9e7d50f3e68550c",
+          "kind": "function",
+          "name": "load"
+        },
+        {
+          "refid": "namespacedoxy2json_1aca2cb250610674dc75b63101ce201a32",
+          "kind": "function",
+          "name": "run"
+        },
+        {
+          "refid": "namespacedoxy2json_1a5a41d4e3ef8abcd2305ebeef971fca6a",
+          "kind": "function",
+          "name": "main"
+        }
+      ]
+    },
+    {
+      "refid": "doxy2json_8py",
+      "kind": "file",
+      "name": "doxy2json.py"
+    },
+    {
+      "refid": "todo",
+      "kind": "page",
+      "name": "todo"
+    },
+    {
+      "refid": "dir_165eae96eb2b15ed90694ff99a2c82c1",
+      "kind": "dir",
+      "name": "scripts/doxygen"
+    },
+    {
+      "refid": "dir_53e6fa9553ac22a5646d2a2b2d7b97a1",
+      "kind": "dir",
+      "name": "scripts"
+    }
+  ]
+}

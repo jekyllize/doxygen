@@ -1,0 +1,63 @@
+defaults:
+- scope:
+    path: ""
+  values:
+    lang: "en"
+
+- scope:
+    path: ""
+    type: "pages"
+  values:
+    layout: "default"
+
+- scope:
+    path: ""
+    type: "posts"
+  values:
+    layout:     "post"
+    date_fmt:   "%F"
+    categories: "news"
+    comments:   false
+
+exclude:
+- vendor/bundle/
+- vendor/cache/
+- vendor/gems/
+- vendor/ruby/
+- Gemfile
+- Gemfile.lock
+- LICENSE
+- new_post
+- node_modules
+- package.json
+- package-lock.json
+- README.md
+- setup.sh
+- assets/css/style.css
+- TODO.md
+- yarn.lock
+- yarn-error.log
+
+plugins:
+- jekyll-sitemap
+- jemoji
+
+baseurl: "/doxygen"
+
+organization:
+  name: "Jekyllize"
+  url: "https://github.com/jekyllize"
+
+project:
+  name: "doxy2json"
+  copyright_owner: "Jekyllize Team"
+  spdx_license_id: "MPL-2.0"
+  docs_path: "master/docs"
+  authors:
+    content: "Andrea Zanellato"
+    web:     "Andrea Zanellato"
+  repository:
+    url: "https://github.com/jekyllize/doxygen"
+
+locale:
+  default: "en"

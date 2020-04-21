@@ -1,0 +1,549 @@
+{
+  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+  "xsi:noNamespaceSchemaLocation": "compound.xsd",
+  "version": "1.8.17",
+  "compounddef": [
+    {
+      "id": "namespacedoxy2json",
+      "kind": "namespace",
+      "language": "Python",
+      "compoundname": "doxy2json",
+      "sectiondef": [
+        {
+          "kind": "func",
+          "memberdef": [
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1a620ab7ba085a82a31cdb7de2ecbb3ea6",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.create_api_index"
+              },
+              "argsstring": {
+                "value": "(dest_dir)"
+              },
+              "name": {
+                "value": "create_api_index"
+              },
+              "param": [
+                {
+                  "type": {
+                    "value": "dest_dir"
+                  },
+                  "defname": {
+                    "value": "dest_dir"
+                  }
+                }
+              ],
+              "briefdescription": {
+                "para": [
+                  {
+                    "value": "Creates a Markdown page index with the list of API version links."
+                  }
+                ]
+              },
+              "detaileddescription": {
+                "para": [
+                  {
+                    "value": "The result page will be placed in the docs directory as index for the list of API pages when placing several API versions documentation in subdirectories."
+                  },
+                  {
+                    "parameterlist": [
+                      {
+                        "kind": "param",
+                        "parameteritem": [
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "dest_dir"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "Destination directory for the resulting index.md file."
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 45,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 45,
+                "bodyend": 70
+              }
+            },
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1a5e0cdaab152dfb3980da9511b94bfcce",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.git_version"
+              },
+              "argsstring": {
+                "value": "()"
+              },
+              "name": {
+                "value": "git_version"
+              },
+              "briefdescription": null,
+              "detaileddescription": null,
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 71,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 71,
+                "bodyend": 86
+              }
+            },
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1a2a199775b2922addb65faf079f312760",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.from_xml"
+              },
+              "argsstring": {
+                "value": "(file, dest_dir)"
+              },
+              "name": {
+                "value": "from_xml"
+              },
+              "param": [
+                {
+                  "type": {
+                    "value": "file"
+                  },
+                  "defname": {
+                    "value": "file"
+                  }
+                },
+                {
+                  "type": {
+                    "value": "dest_dir"
+                  },
+                  "defname": {
+                    "value": "dest_dir"
+                  }
+                }
+              ],
+              "briefdescription": {
+                "para": [
+                  {
+                    "value": "Converts Doxygen XML output to JSON data and Markdown pages."
+                  }
+                ]
+              },
+              "detaileddescription": {
+                "para": [
+                  {
+                    "computeroutput": [
+                      {
+                        "value": "_data/api"
+                      }
+                    ]
+                  },
+                  {
+                    "parameterlist": [
+                      {
+                        "kind": "param",
+                        "parameteritem": [
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "file"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "The input file path as string."
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "dest_dir"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "The destination directory name, e.g.: project version."
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 96,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 96,
+                "bodyend": 146
+              }
+            },
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1ab2b3dba47d7c7e80e9e7d50f3e68550c",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.load"
+              },
+              "argsstring": {
+                "value": "(doxyfile)"
+              },
+              "name": {
+                "value": "load"
+              },
+              "param": [
+                {
+                  "type": {
+                    "value": "doxyfile"
+                  },
+                  "defname": {
+                    "value": "doxyfile"
+                  }
+                }
+              ],
+              "briefdescription": {
+                "para": [
+                  {
+                    "value": "Parses a Doxyfile and save the result as a dict."
+                  }
+                ]
+              },
+              "detaileddescription": {
+                "para": [
+                  {
+                    "parameterlist": [
+                      {
+                        "kind": "param",
+                        "parameteritem": [
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "doxyfile"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "The file path to the Doxyfile as string."
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "xrefsect": [
+                      {
+                        "id": "todo_1_todo000001",
+                        "xreftitle": [
+                          "Todo"
+                        ],
+                        "xrefdescription": {
+                          "para": [
+                            {
+                              "value": "Check for inline comments."
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 153,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 153,
+                "bodyend": 204
+              }
+            },
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1aca2cb250610674dc75b63101ce201a32",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.run"
+              },
+              "argsstring": {
+                "value": "(doxyfile=\"Doxyfile\", dest_dir=\"api\")"
+              },
+              "name": {
+                "value": "run"
+              },
+              "param": [
+                {
+                  "type": {
+                    "value": "doxyfile"
+                  },
+                  "defname": {
+                    "value": "doxyfile"
+                  },
+                  "defval": {
+                    "value": "\"Doxyfile\""
+                  }
+                },
+                {
+                  "type": {
+                    "value": "dest_dir"
+                  },
+                  "defname": {
+                    "value": "dest_dir"
+                  },
+                  "defval": {
+                    "value": "\"api\""
+                  }
+                }
+              ],
+              "briefdescription": {
+                "para": [
+                  {
+                    "value": "Loads a Doxyfile and runs the main documentation generation process."
+                  }
+                ]
+              },
+              "detaileddescription": {
+                "para": [
+                  {
+                    "parameterlist": [
+                      {
+                        "kind": "param",
+                        "parameteritem": [
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "doxyfile"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "The name of the Doxygen configuration file."
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "parameternamelist": [
+                              {
+                                "parametername": [
+                                  {
+                                    "value": "dest_dir"
+                                  }
+                                ]
+                              }
+                            ],
+                            "parameterdescription": {
+                              "para": [
+                                {
+                                  "value": "The name of the destination directory."
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "xrefsect": [
+                      {
+                        "id": "todo_1_todo000002",
+                        "xreftitle": [
+                          "Todo"
+                        ],
+                        "xrefdescription": {
+                          "para": [
+                            {
+                              "value": "Manage OUTPUT_DIRECTORY and XML_OUTPUT relation"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 212,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 212,
+                "bodyend": 234
+              }
+            },
+            {
+              "kind": "function",
+              "id": "namespacedoxy2json_1a5a41d4e3ef8abcd2305ebeef971fca6a",
+              "prot": "public",
+              "static": "false",
+              "const": "false",
+              "explicit": "false",
+              "inline": "false",
+              "virt": "non-virtual",
+              "type": {
+                "value": "def"
+              },
+              "definition": {
+                "value": "def doxy2json.main"
+              },
+              "argsstring": {
+                "value": "()"
+              },
+              "name": {
+                "value": "main"
+              },
+              "briefdescription": null,
+              "detaileddescription": null,
+              "inbodydescription": null,
+              "location": {
+                "file": "scripts/doxygen/doxy2json.py",
+                "line": 235,
+                "column": 1,
+                "bodyfile": "scripts/doxygen/doxy2json.py",
+                "bodystart": 235,
+                "bodyend": 250
+              }
+            }
+          ]
+        }
+      ],
+      "briefdescription": {
+        "para": [
+          {
+            "value": "Converts Doxygen configuration and XML output to JSON."
+          }
+        ]
+      },
+      "detaileddescription": {
+        "para": [
+          {
+            "verbatim": [
+              "  Converts Doxygen configuration and XML output to JSON.\n  Copyright (C) 2020  Andrea Zanellato\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
+            ]
+          },
+          {
+            "simplesect": [
+              {
+                "kind": "author",
+                "para": [
+                  {
+                    "value": "Andrea Zanellato"
+                  }
+                ]
+              },
+              {
+                "kind": "copyright",
+                "para": [
+                  {
+                    "value": "GPL-2.0-or-later"
+                  }
+                ]
+              },
+              {
+                "kind": "date",
+                "para": [
+                  {
+                    "value": "2020"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "location": {
+        "file": "scripts/doxygen/doxy2json.py",
+        "line": 1,
+        "column": 1
+      }
+    }
+  ]
+}

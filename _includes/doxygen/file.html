@@ -1,0 +1,135 @@
+	{%-if api.language == "C++"-%}
+	<p><code>#include &lt;{{ api.compoundname }}&gt;</code></p><hr/>
+	{%-endif-%}
+
+	{%-for sectiondef in api.sectiondef-%}
+		{%-if sectiondef.kind == "typedef"-%}
+			<h2 id="typedefs">Typedefs</h2>
+			{%-for memberdef in sectiondef.memberdef-%}
+				{{ memberdef.definition.value }}
+				{%-for para in memberdef.briefdescription.para-%}
+				<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+			<hr/>
+		{%elsif sectiondef.kind == "enum"-%}
+			<h2 id="enumerations">Enumerations</h2>
+			{%-for memberdef in sectiondef.memberdef-%}
+				<span class="type">enum</span>&nbsp;{{ memberdef.name.value }}&nbsp;{<br/>
+				{%-for enumvalue in memberdef.enumvalue-%}
+					<b class="tab">{{ enumvalue.name.value }}</b>
+						{{ enumvalue.initializer.value }}<br/>
+				{%-endfor-%}
+				}
+				{%-for para in memberdef.briefdescription.para-%}
+				<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+			<hr/>
+		{%elsif sectiondef.kind == "func"-%}
+
+			<h2 class="groupheader" id="functions">{{ functions_title }}</h2>
+			{%-for function in sectiondef.memberdef-%}
+
+				{%-for para in function.briefdescription.para-%}
+					{%-assign function_briefdescription = para.value-%}
+				{%-endfor-%}
+
+				{%-comment-%}
+					Skip functions without description
+					TODO: Make this configurable by Doxyfile
+				{%-endcomment-%}
+				{%-if function_briefdescription == nil-%}{%-continue-%}{%-endif-%}
+
+				{%-for para in function.detaileddescription.para-%}
+					{%-assign function_detaileddescription = para.value-%}
+				{%-endfor-%}
+
+				<h3 class="memtitle" id="{{ function.name.value }}">{{ function.name.value }}</h3>
+				<div class="memitem">
+					<div class="memproto">
+						<table class="memname"><tbody>
+							<tr>
+								<td class="memname">
+									<span class="type">{{ function.type.value }}</span>
+									<span class="func">{{ function.name.value }}</span>
+								</td>
+								<td>(</td>
+								{%-for param in function.param-%}
+									{%-if api.language != "Python"-%}
+									<td class="paramtype">{{ param.type.value }}</td>
+									{%-endif-%}
+									<td class="paramname"><em>{{ param.defname.value }}</em></td>
+									{%-unless forloop.last-%}
+									<td>,</td>
+									{%-endunless-%}
+								{%-endfor-%}
+								<td>)</td>
+								<td></td>
+							</tr>
+						</tbody></table>
+					</div>
+					<div class="memdoc">
+						<p>{{ function_briefdescription }}</p>
+						<p>{{ function_detaileddescription }}</p>
+						{%-if function.param.size-%}
+							<dl class="params">
+								<dt>Parameters</dt>
+								<dd>
+									<table class="params"><tbody>
+										{%-for para in function.detaileddescription.para-%}
+											{%-for parameterlist in para.parameterlist-%}
+												{%-for parameteritem in parameterlist.parameteritem-%}
+													{%-for parameternamelist in parameteritem.parameternamelist-%}
+														{%-for parametername in parameternamelist.parametername-%}
+																<tr><td class="paramname">{{parametername.value}}</td>
+														{%-endfor-%}
+													{%-endfor-%}
+													{%-for para in parameteritem.parameterdescription.para-%}
+														<td>{{para.value}}</td></tr>
+													{%-endfor-%}
+												{%-endfor-%}
+											{%-endfor-%}
+										{%-endfor-%}
+									</tbody></table>
+								</dd>
+							</dl>
+						{%-endif-%}
+						{%-for para in function.detaileddescription.para-%}
+							{%-for xrefsect in para.xrefsect-%}
+								<dl class="todo">
+								{%-for xreftitle in xrefsect.xreftitle-%}
+									<dt>
+										<b><a class="el" href="todo">{{ xreftitle }}:</a></b>
+									</dt>
+								{%-endfor-%}
+								{%-for para in xrefsect.xrefdescription.para-%}
+									<dd class="tab">{{ para.value }}</dd>
+								{%-endfor-%}
+								</dl>
+							{%-endfor-%}
+						{%-endfor-%}
+					</div>
+				</div>
+				{%-assign function_briefdescription    = nil-%}
+				{%-assign function_detaileddescription = nil-%}
+			{%-endfor-%}
+		{%-endif-%}
+	{%-endfor-%}
+
+	{%-if api.innerclass.size > 0-%}
+		{%-for class in api.innerclass-%}
+			{%-assign class_api = site.data.api.develop[class.refid].compounddef-%}
+			<h2 id="classes">Classes</h2><hr/>
+			<p><span class="type">class</span><a href="{{ page.dir }}{{ class.refid }}">
+				{{ class.value }}</a></p>
+			{%-for compound in class_api-%}
+				{%-for para in compound.briefdescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+				{%-for para in compound.detaileddescription.para-%}
+					<p>{{ para.value }}</p>
+				{%-endfor-%}
+			{%-endfor-%}
+		{%-endfor-%}
+	{%-endif-%}
