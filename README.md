@@ -12,5 +12,7 @@ to be used with [Jekyll].
 
 - Better and complete management of the generated Doxyfile configuration.
 
+- CREATE_SUBDIRS is not (yet) supported.
+
 [Doxygen]: http://doxygen.nl/
 [Jekyll]:  https://jekyllrb.com/
