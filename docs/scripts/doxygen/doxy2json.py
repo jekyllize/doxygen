@@ -17,6 +17,7 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
+
 ##
 # @file      doxy2json.py
 # @package   doxy2json
@@ -35,32 +36,8 @@ import subprocess
 import sys
 import xmlschema
 
-## Creates a Markdown page index with the list of API version links.
-#
-# The result page will be placed in the docs directory as index for the list of
-# API pages when placing several API versions documentation in subdirectories.
-#
-# @param dest_dir Destination directory for the resulting index.md file.
-#
-def create_api_index(dest_dir):
-
-  dest = Path(dest_dir)
-  if not dest.exists() and not dest.is_dir():
-    print("Error: '{}' doesn't esists or not a directory.".format(dest))
-  """
-  repo = Repo(".")
-  tags = [
-    ref[10:].decode("utf-8")
-    for ref in repo.refs.allkeys()
-    if ref.startswith(b"refs/tags")
-  ]
-  """
-  index  = Path(dest / "index.md")
-  header = "---\ntitle: \"API\"\n---\n"
-  with index.open('w') as file:
-    file.write(header)
-    file.write('\n'.join(["- [{}]({})".format(subdir, subdir) \
-      for subdir in list(map(lambda p: p.name, filter(Path.is_dir, dest.iterdir())))]))
+config   = {} # Doxygen config
+settings = {} # App settings
 
 # Undocumented
 #
@@ -84,48 +61,97 @@ def git_version():
 
   return(tag)
 
+## Creates a Markdown page index with the list of API version links.
+#
+# The result page will be placed in the docs directory as index for the list of
+# API pages when placing several API versions documentation in subdirectories.
+#
+# @param dest_dir Destination directory Path for the resulting index.md file.
+#
+def create_api_index(dest_dir):
+
+  if not dest_dir.exists() and not dest_dir.is_dir():
+    print("Error: '{}' doesn't esists or not a directory.".format(dest_dir))
+    exit(1)
+  """
+  repo = Repo(".")
+  tags = [
+    ref[10:].decode("utf-8")
+    for ref in repo.refs.allkeys()
+    if ref.startswith(b"refs/tags")
+  ]
+  """
+  index  = Path(dest_dir / "index.md")
+  header = "---\ntitle: \"API\"\n---\n"
+  with index.open('w') as f:
+    f.write(header)
+    f.write('\n'.join(["- [{}]({})".format(subdir, subdir) \
+      for subdir in \
+        list(map(lambda p: p.name, filter(Path.is_dir, dest_dir.iterdir())))]))
+    f.write('\n')
+
 ## Converts Doxygen XML output to JSON data and Markdown pages.
 #
 # Given a relative or absolute XML file path, generates a JSON data file
 # to be saved in `_data/api` and the related Markdown page in the related
 # docs directory.
 #
-# @param file     The input file path as string.
-# @param dest_dir The destination directory name, e.g.: project version.
+# @param file_in  The input file Path.
+# @param dest_dir The destination directory Path name.
 #
-def from_xml(file, dest_dir):
+def from_xml(file_in, dest_dir):
 
-# tag_name  = git_version()
-  data_dir  = Path("_data/" + dest_dir)
-  md_dir    = Path(dest_dir)
-  xml_dir   = Path(file).parents[0]
-  file_name = Path(file).name
+  """
+  |                                    | cfg.get("use_subdirs") == False | use_subdirs == True
+  | -----------------------------------------------------------------------------------------
+  | file_in                            | ../path/to/api/xml/filename.xml | * same *
+  | xml_dir     = file_in.parents[0]   | ../path/to/api/xml              | * same *
+  | md_dir      = dest_dir             | ../path/to/api                  | ../path/to/api/1.2.3
+  | data_prefix = dest_dir.parent      | ../path/to                      | * same *
+  | data_suffix                        | api                             | api/1.2.3
+  | file_name   = file_in.name         | filename.xml                    | * same *
+  | base_name   = Path(file_name).stem | filename                        | * same *
+  | api_dir     = dest_dir.name        | api                             | 1.2.3
+  | data_dir                           | ../path/to/_data/api            | ../path/to/_data/api/1.2.3
+  """
+  xml_dir   = file_in.parent
+  file_name = file_in.name
   base_name = Path(file_name).stem
+  out_dir   = Path(dest_dir).resolve() # can't do .parent on a relative '.'
+
+  sys.exit() # FIXME from here
+
+  if settings.get("use_subdirs"):
+    dir_prefix  = out_dir.parents[1]
+  else:
+    dir_prefix  = out_dir.parent
+
+  data_prefix = str(dir_prefix)
+  datadirname = data_prefix + "/_data/" + str(dest_dir).replace(data_prefix, '')
+  data_dir = Path(datadirname)
 
   if file_name == "index.xml":
     xsd_file = Path(xml_dir / "index.xsd")
   else:
     xsd_file = Path("scripts/doxygen/compound.xsd")
 
-# JSON data files
+  # JSON data files
   json_name = base_name + ".json"
-  json_path = data_dir / json_name
-  json_file = Path(json_path)
+  json_file = data_dir.relative_to(Path(data_prefix)) / json_name
 
-# Markdown content files
+  # Markdown content files
   md_hdr  = "---\nlayout: \"doxygen\"\nno_title_header: true\n---\n"
   md_name = base_name + ".md"
-  md_path = md_dir / md_name
-  md_file = Path(md_path)
+  md_file = dest_dir / md_name
 
   if not data_dir.exists():
     data_dir.mkdir(parents=True)
 
-  if not md_dir.exists():
-    md_dir.mkdir(parents=True)
+  if not dest_dir.exists():
+    dest_dir.mkdir(parents=True)
 
   x = xmlschema.XMLSchema(str(xsd_file))
-  d = x.to_dict(file)
+  d = x.to_dict(str(file_in))
   s = json.dumps(d, indent=2)
 
   # Fix datafiles to work with Jekyll
@@ -133,14 +159,14 @@ def from_xml(file, dest_dir):
        .replace("\"$\":", "\"value\":") \
        .replace("\"no\"", "\"false\"")
 
-  print("Generating {:s}...".format(str(json_path)))
+  print("Generating {:s}...".format(str(json_file)))
   json_file.open('w')
   json_file.write_text(s)
 
   if md_file.exists():
-    print("Skipping {:s}...".format(str(md_path)))
+    print("Skipping {:s}...".format(str(md_file)))
   else:
-    print("Generating {:s}...".format(str(md_path)))
+    print("Generating {:s}...".format(str(md_file)))
     md_file.open('w')
     md_file.write_text(md_hdr)
 
@@ -150,13 +176,18 @@ def from_xml(file, dest_dir):
 #
 # @todo Check for inline comments.
 #
-def load(doxyfile):
+def load(doxyfile="Doxyfile"):
+
+  f = Path(doxyfile)
+  if not f.exists() or not f.is_file():
+    print("File '{}' not found or not a file.".format(f))
+    sys.exit(1)
 
   doxydict = {}
   doxyfile = open(doxyfile)
   lines    = doxyfile.readlines()
 
-# This is to have Doxygen version *before* run(), maybe unused and later removed
+  # This is to have Doxygen version *before* run(), maybe unused and later removed
   lines[0] = lines[0].replace("# Doxyfile ", "VERSION=")
   is_multi = False
   key_multi= ""
@@ -172,8 +203,14 @@ def load(doxyfile):
       line = lines[i].strip()[:-1]
       is_multi = True
       record   = line.split('=', 1)
-      key_multi= record[0].swapcase().strip()
-      val_list.append(record[1].strip())
+
+      if len(record) > 1:
+        # First line with key/value pair
+        key_multi= record[0].swapcase().strip()
+        val_list.append(record[1].strip())
+      else:
+        # Following line, only value
+        val_list.append(record[0].strip())
       continue
 
     # Value list: append values to saved one, if last reset flags and continue
@@ -204,32 +241,51 @@ def load(doxyfile):
 
 ## Loads a Doxyfile and runs the main documentation generation process.
 #
-# @param doxyfile The name of the Doxygen configuration file.
-# @param dest_dir The name of the destination directory.
+# @param doxyfile    The name of the Doxygen configuration file.
+# @param use_subdirs Whether to use subdirectories named by the API version.
 #
 # @todo Manage OUTPUT_DIRECTORY and XML_OUTPUT relation
 #
-def run(doxyfile="Doxyfile", dest_dir="api"):
+def run(doxyfile="Doxyfile", use_subdirs=False):
 
-  path = Path(doxyfile)
-  if not path.exists():
-    raise FileNotFoundError("No such file or directory: '{:s}'".format(doxyfile))
+  f = Path(doxyfile)
+  if not f.exists() or not f.is_file():
+    print("Error: '{}' doesn't esists or not a file.".format(f))
+    exit(1)
 
-  subprocess.run(["doxygen", doxyfile])
+  if use_subdirs:
+    settings["use_subdirs"] = True
+
+  global config
   config = load(doxyfile)
-  xmldir = Path(config.get("xml_output", "./xml"))
+  prjver = config.get("project_number", "development")
+  outdir = Path(config.get("output_directory", "."))
+  xmldir = Path(outdir / config.get("xml_output", "xml"))
+
+  if use_subdirs:
+    outdir = Path(outdir / prjver)
+
+  if not outdir.exists():
+    outdir.mkdir(parents=True)
+
+  cp = subprocess.run(["doxygen", doxyfile])
+  if cp.returncode != 0:
+    exit(cp.returncode)
 
   print("Generating JSON and Markdown files from XML:")
-  for xml in xmldir.iterdir():
-    xmlname = str(xml)
-    if xml.is_file() and \
-      (not ".xsd" in xmlname and not ".xslt" in xmlname and not "dir_" in xmlname):
-        from_xml(xmlname, dest_dir + '/' + config.get("project_number", "develop"))
+  for f in xmldir.iterdir():
+    fname = str(f)
+    if f.is_file() and \
+      (not ".xsd" in fname and not ".xslt" in fname and not "dir_" in fname):
+        from_xml(f, outdir)
 
-  print("Generating API index page in `{}`...".format(dest_dir))
-  create_api_index(dest_dir)
-# print("Removing XML output...")
-# shutil.rmtree(xmldir)
+  print("Removing XML output...")
+  shutil.rmtree(xmldir)
+
+  if use_subdirs:
+    print("Generating API index page in `{:s}`...".format(str(outdir.parent)))
+    create_api_index(outdir.parent)
+
   print("Done.")
 
 def main():
@@ -240,13 +296,12 @@ def main():
   parser.add_argument("-i", "--input", default="Doxyfile", help=\
     "The name of the Doxygen configuration file.")
 
-  parser.add_argument("-o", "--output", default="api", help=\
-    "The name of the destination directory.")
+  parser.add_argument("-s", "--use_subdirs", action="store_true", help=\
+    "Whether to use subdirectories named by the API version.")
 
   args = parser.parse_args()
 
-  if args.input != "":
-    run(args.input, args.output)
+  run(args.input, args.use_subdirs)
 
 if __name__ == "__main__":
   main()
