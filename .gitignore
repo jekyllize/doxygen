@@ -1,23 +1,23 @@
 # Jekyll related files
-/docs/_site/
-/docs/.sass-cache/
-/docs/.jekyll-cache/
-/docs/.jekyll-metadata/
-/docs/.bundle/
-/docs/.vendor/
-/docs/node_modules/
-/docs/assets/css/*.map
-/docs/assets/css/style.css
-/docs/assets/js/*.map
-/docs/Gemfile.lock
-/docs/package-lock.json
-/docs/yarn.lock
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata/
+.bundle/
+.vendor/
+node_modules/
+assets/css/*.map
+assets/css/style.css
+assets/js/*.map
+Gemfile.lock
+package-lock.json
+yarn.lock
 
 # doxy2json generated files
-/docs/_data/api/
-/docs/api/
-/docs/html/
-/docs/xml/
+_data/api/
+api/
+html/
+xml/
 
 # Misc files
 *.DS_Store/
