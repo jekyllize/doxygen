@@ -23,4 +23,4 @@
 *.DS_Store/
 *.code-workspace
 *.log
-*.txt.user*
+test*
