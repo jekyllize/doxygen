@@ -4,6 +4,7 @@ rvm:
 - 2.5.3
 
 install:
+- cd docs
 - bundle install
 
 deploy:
