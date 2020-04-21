@@ -1,0 +1,19 @@
+os: linux
+language: ruby
+rvm:
+- 2.5.3
+
+install:
+- bundle install
+
+script:
+- cd docs
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: _site
+  target_branch: gh-pages
+  on:
+    branch: master
