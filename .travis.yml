@@ -6,9 +6,6 @@ rvm:
 install:
 - bundle install
 
-script:
-- cd docs
-
 deploy:
   provider: pages
   skip_cleanup: true
