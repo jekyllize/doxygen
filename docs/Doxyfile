@@ -5,7 +5,8 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = doxy2json
-PROJECT_NUMBER         = develop
+PROJECT_NUMBER         = 1.2.3
+OUTPUT_DIRECTORY       = ./../public/api
 ALWAYS_DETAILED_SEC    = YES
 JAVADOC_AUTOBRIEF      = YES
 OPTIMIZE_OUTPUT_JAVA   = YES
@@ -39,6 +40,7 @@ VERBATIM_HEADERS       = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
 #---------------------------------------------------------------------------
+GENERATE_HTML          = NO
 HTML_COLORSTYLE_HUE    = 210
 HTML_COLORSTYLE_SAT    = 150
 HTML_COLORSTYLE_GAMMA  = 90
