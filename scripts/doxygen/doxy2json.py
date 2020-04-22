@@ -114,22 +114,25 @@ def from_xml(file_in, dest_dir):
   | api_dir     = dest_dir.name        | api                             | 1.2.3
   | data_dir                           | ../path/to/_data/api            | ../path/to/_data/api/1.2.3
   """
+  dest_abs = Path(dest_dir).resolve() # can't do .parent on a relative '.'
+  if settings.get("use_subdirs"):
+    dir_prefix  = dest_abs.parents[1]
+  else:
+    dir_prefix  = dest_abs.parent
+
+  data_prefix = str(dir_prefix)
+  data_suffix = str(dest_abs).replace(data_prefix, '')
+  datadirname = data_prefix + "/_data" + data_suffix
+  data_dir = Path(datadirname)
+  """
+  print("[debug] dest_dir    = {:s}".format(str(dest_abs)))
+  print("[debug] data_suffix = {:s}".format(data_suffix))
+  print("[debug] data_dir    = {:s}".format(datadirname))
+  """
+  # XML schema
   xml_dir   = file_in.parent
   file_name = file_in.name
   base_name = Path(file_name).stem
-  out_dir   = Path(dest_dir).resolve() # can't do .parent on a relative '.'
-
-  sys.exit() # FIXME from here
-
-  if settings.get("use_subdirs"):
-    dir_prefix  = out_dir.parents[1]
-  else:
-    dir_prefix  = out_dir.parent
-
-  data_prefix = str(dir_prefix)
-  datadirname = data_prefix + "/_data/" + str(dest_dir).replace(data_prefix, '')
-  data_dir = Path(datadirname)
-
   if file_name == "index.xml":
     xsd_file = Path(xml_dir / "index.xsd")
   else:
@@ -137,7 +140,7 @@ def from_xml(file_in, dest_dir):
 
   # JSON data files
   json_name = base_name + ".json"
-  json_file = data_dir.relative_to(Path(data_prefix)) / json_name
+  json_file = data_dir / json_name
 
   # Markdown content files
   md_hdr  = "---\nlayout: \"doxygen\"\nno_title_header: true\n---\n"
@@ -294,10 +297,10 @@ def main():
     "Loads a Doxyfile and runs the main documentation generation process.")
 
   parser.add_argument("-i", "--input", default="Doxyfile", help=\
-    "The name of the Doxygen configuration file.")
+    "The name of the Doxygen configuration file [default: \"Doxyfile\"]")
 
   parser.add_argument("-s", "--use_subdirs", action="store_true", help=\
-    "Whether to use subdirectories named by the API version.")
+    "Whether to use subdirectories named by the API version [default: False]")
 
   args = parser.parse_args()
 

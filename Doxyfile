@@ -5,8 +5,8 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = doxy2json
-PROJECT_NUMBER         = 1.2.3
-OUTPUT_DIRECTORY       = ./../public/api
+PROJECT_NUMBER         = development
+OUTPUT_DIRECTORY       = api
 ALWAYS_DETAILED_SEC    = YES
 JAVADOC_AUTOBRIEF      = YES
 OPTIMIZE_OUTPUT_JAVA   = YES
