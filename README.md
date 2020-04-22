@@ -16,6 +16,17 @@ to be used with [Jekyll].
 
 The process can be also automated using tools like Travis-CI.
 
+## Usage
+
+- Run `./scripts/doxygen/doxy2json.py` from the directory
+  where the `Doxyfile` is stored,
+  in this case `_data` and `api` directories will be created
+
+- Switch to the website source tree: `git checkout gh-pages`
+
+Now the files should be ready to be processed by Jekyll,
+a `setup.sh` script will facilitate the process.
+
 ## TODO
 
 - A better XML schema to facilitate parsing.
