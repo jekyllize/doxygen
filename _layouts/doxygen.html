@@ -33,6 +33,9 @@ layout: "default"
 
 	<h1>{{ title }}</h1><hr/>
 
+{%comment%}
+	Author, copyright, date
+{%endcomment%}
 	<div class="textblock">
 		{%-for para in api.briefdescription.para-%}
 		<p>{{ para.value }}</p>
